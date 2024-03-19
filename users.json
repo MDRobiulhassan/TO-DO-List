@@ -1,0 +1,38 @@
+[
+    {
+        "name": "Robiul Hassan",
+        "email": "robiul@example.com",
+        "password": "robiul123",
+        "confirmPassword": "robiul123"
+    },
+    {
+        "name": "Sadman Sadit",
+        "email": "sadman@example.com",
+        "password": "sadman456",
+        "confirmPassword": "sadman456"
+    },
+    {
+        "name": "Iftekher Chy",
+        "email": "iftekher@example.com",
+        "password": "iftekher789",
+        "confirmPassword": "iftekher789"
+    },
+    {
+        "name": "Mahafujul Alam",
+        "email": "mahafujul@example.com",
+        "password": "mahafujul098",
+        "confirmPassword": "mahafujul098"
+    },
+    {
+        "name": "Ahmed Reza",
+        "email": "erza@gmail.com",
+        "password": "password123",
+        "confirmPassword": "password123"
+    },
+    {
+        "name": "Nayan Kumar",
+        "email": "nayan@example.com",
+        "password": "nayan567",
+        "confirmPassword": "nayan567"
+    }
+]
