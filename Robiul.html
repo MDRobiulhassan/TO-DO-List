@@ -120,6 +120,15 @@
             taskInput.value = '';
             timeInput.value = '';
         }
+
+        document.querySelectorAll('.dropdown-item').forEach(item => {
+            item.addEventListener('click', function () {
+                const target = this.getAttribute('data-target');
+                if (target) {
+                    window.location.href = target;
+                }
+            });
+        });
     </script>
 </body>
 
