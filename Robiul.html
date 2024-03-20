@@ -33,35 +33,26 @@
         </header>
         <hr class="divider">
 
-        <!-- Task Add Form -->
-        <div class="task-form my-4">
-            <h4>Add Task</h4>
-            <select id="week-dropdown" class="form-control mb-2">
+        <!-- Week Selection Dropdown -->
+        <div class="week-dropdown my-4">
+            <h4>Select Week</h4>
+            <select id="week-dropdown" class="form-control" onchange="displayDays()">
+                <option value="Week">Week</option>
                 <option value="Week 1">Week 1</option>
                 <option value="Week 2">Week 2</option>
                 <option value="Week 3">Week 3</option>
                 <!-- Add more options for additional weeks if needed -->
             </select>
-            <input type="text" id="task-input" class="form-control mb-2" placeholder="Enter task">
-            <button onclick="addTask()" class="btn btn-primary">Add Task</button>
         </div>
 
-        <!-- Month Tasks -->
-        <div id="month-tasks">
-            <!-- Tasks will be dynamically added here -->
-        </div>
-
-        <!-- Progress Bar -->
-        <div id="progress-bar" class="progress my-4">
-            <div id="progress-bar-value" class="progress-bar" role="progressbar" style="width: 0%;" aria-valuenow="0"
-                aria-valuemin="0" aria-valuemax="100">0%</div>
+        <!-- Days and Tasks -->
+        <div class="days-tasks my-4">
+            <!-- Days and tasks will be populated dynamically -->
         </div>
 
         <footer class="footer my-auto text-center text-white text-bold">
             <h5>2024 &copy;Robiul Hassan</h5>
         </footer>
-
-
     </div>
 
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
@@ -75,83 +66,60 @@
         crossorigin="anonymous"></script>
 
     <script>
-        var tasks = {}; // Object to store tasks for each week
-
-        // Function to add a task
-        function addTask() {
+        // Function to display days for the selected week
+        function displayDays() {
             var week = document.getElementById('week-dropdown').value;
-            var task = document.getElementById('task-input').value;
+            var daysTasksDiv = document.querySelector('.days-tasks');
+            daysTasksDiv.innerHTML = ''; // Clear previous content
 
-            // Check if the week exists in the tasks object
-            if (!tasks[week]) {
-                tasks[week] = []; // Initialize an empty array for tasks
+            // Create a container for each day
+            for (let i = 1; i <= 7; i++) {
+                var dayDiv = document.createElement('div');
+                dayDiv.classList.add('day-container');
+                dayDiv.innerHTML = `
+                    <h4>Day ${i}</h4>
+                    <div class="task-form">
+                        <input type="text" class="form-control mb-2" placeholder="Enter Task">
+                        <input type="number" class="form-control mb-2" placeholder="Allocate Time (in hours)">
+                        <button onclick="addTask(this)" class="btn btn-primary">Add Task</button>
+                    </div>
+                `;
+                daysTasksDiv.appendChild(dayDiv);
+            }
+        }
+
+        // Function to add a task for a specific day
+        function addTask(button) {
+            var taskInput = button.parentElement.querySelector('input[type="text"]');
+            var timeInput = button.parentElement.querySelector('input[type="number"]');
+            var task = taskInput.value;
+            var time = timeInput.value;
+
+            // Check if task or time is empty
+            if (!task.trim() || !time) {
+                alert('Task and Allocate Time fields cannot be empty');
+                return;
             }
 
-            // Add the task to the corresponding week
-            tasks[week].push(task);
+            // Create a task element
+            var taskElement = document.createElement('div');
+            taskElement.classList.add('task-item');
+            taskElement.innerHTML = `
+                <div class="task-info">
+                    <span>${task}</span>
+                    <span class="task-time">${time} hours</span>
+                </div>
+                <input type="checkbox" class="task-checkbox">
+            `;
 
-            // Clear the input field
-            document.getElementById('task-input').value = '';
+            // Add task element to the respective day container
+            var dayContainer = button.parentElement.parentElement;
+            dayContainer.appendChild(taskElement);
 
-            // Update tasks display
-            displayTasks();
-            // Update progress bar
-            updateProgressBar();
+            // Clear task input
+            taskInput.value = '';
+            timeInput.value = '';
         }
-
-        // Function to display tasks for each week
-        function displayTasks() {
-            var monthTasks = document.getElementById('month-tasks');
-            monthTasks.innerHTML = ''; // Clear previous tasks
-
-            // Loop through each week in the tasks object
-            Object.keys(tasks).forEach(week => {
-                var weekDiv = document.createElement('div');
-                weekDiv.classList.add('week-tasks');
-                weekDiv.innerHTML = `<h5>${week}</h5>`;
-
-                // Loop through each task in the week
-                tasks[week].forEach(task => {
-                    var taskDiv = document.createElement('div');
-                    taskDiv.classList.add('task-item');
-                    taskDiv.textContent = task;
-                    weekDiv.appendChild(taskDiv);
-                });
-
-                monthTasks.appendChild(weekDiv);
-            });
-        }
-
-        // Function to update progress bar based on task completion
-        function updateProgressBar() {
-            var totalTasks = 0;
-            var completedTasks = 0;
-
-            // Loop through each week in the tasks object
-            Object.keys(tasks).forEach(week => {
-                totalTasks += tasks[week].length;
-
-                // Count completed tasks in each week
-                tasks[week].forEach(task => {
-                    if (task.includes('(Completed)')) {
-                        completedTasks++;
-                    }
-                });
-            });
-
-            // Calculate progress percentage
-            var progress = totalTasks > 0 ? (completedTasks / totalTasks) * 100 : 0;
-
-            // Update progress bar value
-            var progressBarValue = document.getElementById('progress-bar-value');
-            progressBarValue.style.width = progress + '%';
-            progressBarValue.textContent = progress.toFixed(1) + '%';
-        }
-
-        // Initial display of tasks and progress bar
-        displayTasks();
-        updateProgressBar();
-
     </script>
 </body>
 
